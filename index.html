@@ -695,6 +695,68 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 .phones{margin-bottom:clamp(40px,5vw,80px)}
 @media (max-width:860px){.app-device{left:auto;right:-1vw;bottom:-14%;width:28vw}}
 
+/* ===== How it fits, as Apple's highlights: three large cards in a row that move on by themselves while the
+   section is in view. A small glass control below shows the step (the current dot stretches and fills like a
+   progress bar) and pauses or replays. Swipe, or tap a dot, to go straight to a step. ===== */
+.fitc{--inset:max(var(--g),calc((100vw - var(--max)) / 2));--dur:5.5s;overflow:hidden}
+.fitc-head{margin-bottom:clamp(32px,4vw,56px)}
+.fitc-head .body{margin-top:16px}
+.fitc-track{list-style:none;margin:0;padding:0 0 0 var(--inset);display:flex;gap:clamp(14px,1.6vw,24px);overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;scroll-padding-left:var(--inset);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.fitc-track::-webkit-scrollbar{display:none}
+.fitc-track::after{content:"";flex:0 0 calc(var(--inset) - clamp(14px,1.6vw,24px))}
+.fitc-card{position:relative;flex:0 0 min(84vw,1100px);scroll-snap-align:start;border-radius:clamp(22px,2.4vw,32px);overflow:hidden;background:var(--paper)}
+.fitc-media,.fitc-media img{display:block;width:100%;height:auto}
+.fitc-cap{position:absolute;z-index:2;left:clamp(28px,3.4vw,52px);top:clamp(28px,3.4vw,52px);max-width:min(34%,380px)}
+.fitc-cap h3{font-size:clamp(24px,2.3vw,34px);font-weight:650;letter-spacing:-.03em;line-height:1.1;margin-top:18px}
+.fitc-cap p{margin-top:10px;font-size:clamp(16px,1.25vw,19px);line-height:1.45;color:var(--muted);text-wrap:pretty}
+.fitc .glyph{width:56px;height:56px;margin:0}
+.fitc-ai{position:absolute;right:16px;bottom:14px;z-index:2;font-size:11px;padding:6px 9px;border-radius:999px;background:rgba(244,241,233,.86);color:var(--muted)}
+/* the control */
+.fitc-ctl{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:clamp(24px,3vw,36px)}
+.fitc-dots{display:flex;align-items:center;gap:10px;height:44px;padding:0 18px;border-radius:999px}
+.fitc-dot{position:relative;width:8px;height:8px;padding:0;border:0;border-radius:999px;background:rgba(14,53,48,.28);cursor:pointer;overflow:hidden;
+  transition:width .5s var(--ease),background-color .3s ease}
+.fitc-dot::after{content:"";position:absolute;inset:-14px -6px}
+.fitc-dot i{position:absolute;inset:0;width:0;border-radius:inherit;background:var(--pine)}
+.fitc-dot.on{width:44px;background:rgba(14,53,48,.16)}
+.fitc[data-state="playing"] .fitc-dot.on i{animation:fitc-fill var(--dur) linear forwards}
+.fitc[data-state="paused"] .fitc-dot.on i{animation:fitc-fill var(--dur) linear forwards;animation-play-state:paused}
+.fitc[data-state="ended"] .fitc-dot.on i,.fitc.static .fitc-dot.on i{width:100%}
+@keyframes fitc-fill{from{width:0}to{width:100%}}
+.fitc-play{width:44px;height:44px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;color:var(--ink);cursor:pointer}
+.fitc-play svg{grid-area:1/1;width:15px;height:15px;fill:currentColor;opacity:0;transform:scale(.7);transition:opacity .3s var(--ease),transform .4s var(--ease)}
+.fitc[data-state="playing"] .i-pause,.fitc[data-state="paused"] .i-play,.fitc[data-state="ended"] .i-replay,.fitc.static .i-play{opacity:1;transform:none}
+/* the step icons draw themselves when their card arrives, as before */
+.js .fitc-card .g-draw{stroke-dashoffset:1;transition:stroke-dashoffset 1.3s var(--ease) .25s}
+.js .fitc-card .g-pod{opacity:0;transform:translateY(4px);transition:opacity .9s var(--ease) .9s,transform .9s var(--ease) .9s}
+.js .fitc-card .g-drop{transform:translateY(-7px);opacity:0;transition:transform 1.3s var(--ease) .3s,opacity .8s var(--ease) .3s}
+.js .fitc-card .g-base{stroke-dashoffset:1;transition:stroke-dashoffset 1.1s var(--ease) .2s}
+.js .fitc-card .g-shadow{opacity:0;transform-box:fill-box;transform-origin:center;transform:scaleX(.5);transition:opacity 1.2s var(--ease) .9s,transform 1.2s var(--ease) .9s}
+.js .fitc-card .g-light{opacity:0;transition:opacity 1s var(--ease) 1.5s}
+.js .fitc-card .g-ring{opacity:0;transform:scale(.4)}
+.js .fitc-card.lit .g-draw,.js .fitc-card.lit .g-base{stroke-dashoffset:0}
+.js .fitc-card.lit .g-pod,.js .fitc-card.lit .g-drop,.js .fitc-card.lit .g-shadow{opacity:1;transform:none}
+.js .fitc-card.lit .g-light{opacity:1}
+.js .fitc-card.lit .g-btn{animation:press .5s var(--ease) .7s 1 both}
+.js .fitc-card.lit .g-ring{animation:ring 1.8s var(--ease) .85s 1 both}
+.js .fitc-card.replay *{transition:none!important;animation:none!important}
+@media (max-width:860px){
+  .fitc-card{flex-basis:86vw;display:flex;flex-direction:column}
+  .fitc-cap{position:relative;left:auto;top:auto;max-width:none;padding:26px 24px 8px}
+  .fitc-cap h3{font-size:22px;margin-top:14px}
+  .fitc-cap p{font-size:16px}
+  .fitc .glyph{width:46px;height:46px}
+  .fitc-media{margin-top:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .fitc-card .g-draw,.js .fitc-card .g-base{stroke-dashoffset:0!important}
+  .js .fitc-card .g-pod,.js .fitc-card .g-drop,.js .fitc-card .g-shadow,.js .fitc-card .g-light{opacity:1!important;transform:none!important}
+  .fitc-track{scroll-behavior:auto}
+}
+.fitc .glyph{display:block}
+@media (min-width:861px){.fitc-cap{max-width:min(26%,300px)}}
+
 </style>
 </head>
 <body>
@@ -744,7 +806,7 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 </section>
 
 <section class="lightband" id="device" aria-labelledby="h-light">
-  <img class="lightband-img" src="media/light-1672.webp" srcset="media/light-960.webp 960w, media/light-1672.webp 1672w" sizes="100vw" width="1672" height="941" loading="lazy" alt="Still on deep pine, its small mint light glowing on the face of the pod.">
+  <img class="lightband-img" src="media/light-1672.webp" srcset="media/light-960.webp 960w, media/light-1672.webp 1672w, media/light-3344.webp 3344w" sizes="100vw" width="1672" height="941" loading="lazy" alt="Still on deep pine, its small mint light glowing on the face of the pod.">
   <div class="wrap lightband-copy rv">
     <h2 id="h-light">A soft light tells you it's on.</h2>
     <p class="body">A tiny mint light on the face. Nothing to read, nothing to check.</p>
@@ -759,14 +821,14 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   <div class="wrap pair-grid">
     <div class="pair-item rv">
       <div class="ears" aria-hidden="true">
-        <img class="ear-a" src="media/ear-a-462.webp" width="462" height="589" loading="lazy" alt="">
-        <img class="ear-b" src="media/ear-b-469.webp" width="469" height="618" loading="lazy" alt="">
+        <img class="ear-a" src="media/ear-a-924.webp" width="924" height="1178" loading="lazy" alt="">
+        <img class="ear-b" src="media/ear-b-938.webp" width="938" height="1236" loading="lazy" alt="">
       </div>
       <h3>Either ear.</h3>
       <p class="body">The same device fits left or right. Turn it around and it's ready for the other side.</p>
     </div>
     <div class="pair-item rv" style="--d:120ms">
-      <div class="weight" aria-hidden="true"><span class="w-num">11</span><span class="w-unit">g</span><img class="w-slim" src="media/slim-186.webp" width="186" height="741" loading="lazy" alt=""></div>
+      <div class="weight" aria-hidden="true"><span class="w-num">11</span><span class="w-unit">g</span><img class="w-slim" src="media/slim-372.webp" width="372" height="1482" loading="lazy" alt=""></div>
       <h3>About 11 grams.<sup><a href="#n2" aria-label="Note 2">2</a></sup></h3>
       <p class="body">Slim in profile and light enough to forget it's there.</p>
     </div>
@@ -775,22 +837,38 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 
 
 
-<!-- How it fits -->
-<section class="fit-scroll" id="fit" aria-labelledby="h-fit">
- <div class="fit-track"><div class="fit-pin">
-  <div class="wrap split fit">
-    <div class="rv">
-      <h2 id="h-fit">On in a moment.</h2>
-      <p class="body">Still sits behind your ear and leaves it open, so you still hear everything around you.</p>
-      <div class="steps-wrap"><span class="hl-move" aria-hidden="true"></span><ol class="steps">
-        <li class="rv on lit" data-step="0" style="--d:0ms"><span class="glyph g1" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="g-draw" pathLength="1" d="M16 21 C16 10 23 6.5 29.5 8 C36.5 9.5 39.5 17 36.5 25.5 C34.8 30.5 31.8 34.5 28.5 39"/><rect class="g-pod" x="9.5" y="20" width="13" height="17" rx="4.6"/></svg></span><div><b>Hook it over either ear.</b><span class="d">The silicone hook rests over the top.</span></div></li>
-        <li class="rv" data-step="1" style="--d:160ms"><span class="glyph g2" aria-hidden="true"><svg viewBox="0 0 48 48"><ellipse class="g-shadow" cx="24" cy="38.6" rx="9" ry="1.6"/><path class="g-base" pathLength="1" d="M8 40.5 H40"/><rect class="g-drop" x="16" y="17" width="16" height="21" rx="5.5"/></svg></span><div><b>Let it settle behind.</b><span class="d">The pod sits on the bone just behind your ear.</span></div></li>
-        <li class="rv" data-step="2" style="--d:320ms"><span class="glyph g3" aria-hidden="true"><svg viewBox="0 0 48 48"><circle class="g-ring" cx="33.2" cy="21" r="8" pathLength="40"/><rect class="g-body" x="13" y="9" width="20" height="29" rx="6.5"/><rect class="g-btn" x="31.6" y="16.5" width="2.6" height="9" rx="1.3"/><circle class="g-light" cx="19.5" cy="32" r="1.6"/></svg></span><div><b>Press once.</b><span class="d">A soft light tells you it's on, and a gentle, continuous vibration begins.</span></div></li>
-      </ol></div>
-    </div>
-    <figure class="frame paper rv fit-stage"><img class="on" data-step="0" src="media/fit-hook-600.webp" srcset="media/fit-hook-600.webp 600w, media/fit-hook-941.webp 941w" sizes="(max-width:860px) 92vw, 640px" width="941" height="941" loading="lazy" alt="A hand guides the silicone hook over the top of the ear."><img data-step="1" src="media/fit-rest-600.webp" srcset="media/fit-rest-600.webp 600w, media/fit-rest-941.webp 941w" sizes="(max-width:860px) 92vw, 640px" width="941" height="941" loading="lazy" alt="Still resting behind the ear, the ear itself left open." aria-hidden="true"><img data-step="2" src="media/fit-press-600.webp" srcset="media/fit-press-600.webp 600w, media/fit-press-941.webp 941w" sizes="(max-width:860px) 92vw, 640px" width="941" height="941" loading="lazy" alt="Close on the side of Still: the single long button." aria-hidden="true"><figcaption class="fit-cap">AI-generated visualisation</figcaption></figure>
+<!-- How it fits: highlights, after Apple. Three large cards that move on by themselves while in view; a quiet
+     glass control below shows where you are and lets you pause. Swipe, or tap a dot, to go straight to a step. -->
+<section class="sec band fitc" id="fit" aria-labelledby="h-fit">
+  <div class="wrap fitc-head rv">
+    <h2 id="h-fit">On in a moment.</h2>
+    <p class="body">Still sits behind your ear and leaves it open, so you still hear everything around you.</p>
   </div>
- </div></div>
+  <ol class="fitc-track" aria-roledescription="carousel" aria-label="How Still fits, in three steps">
+    <li class="fitc-card" data-i="0" aria-roledescription="slide" aria-label="1 of 3">
+      <div class="fitc-cap"><span class="glyph g1" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="g-draw" pathLength="1" d="M16 21 C16 10 23 6.5 29.5 8 C36.5 9.5 39.5 17 36.5 25.5 C34.8 30.5 31.8 34.5 28.5 39"/><rect class="g-pod" x="9.5" y="20" width="13" height="17" rx="4.6"/></svg></span><h3>Hook it over either ear.</h3><p>The silicone hook rests over the top.</p></div>
+      <picture class="fitc-media"><source media="(max-width:860px)" srcset="media/fit-hook-640.webp 640w, media/fit-hook-1000.webp 1000w" sizes="86vw"><img src="media/fitw-hook-1100.webp" srcset="media/fitw-hook-1100.webp 1100w, media/fitw-hook-2200.webp 2200w" sizes="min(84vw, 1100px)" width="1672" height="941" loading="lazy" alt="A hand guides the silicone hook over the top of the ear."></picture>
+      <span class="fitc-ai">AI-generated visualisation</span>
+    </li>
+    <li class="fitc-card" data-i="1" aria-roledescription="slide" aria-label="2 of 3">
+      <div class="fitc-cap"><span class="glyph g2" aria-hidden="true"><svg viewBox="0 0 48 48"><ellipse class="g-shadow" cx="24" cy="38.6" rx="9" ry="1.6"/><path class="g-base" pathLength="1" d="M8 40.5 H40"/><rect class="g-drop" x="16" y="17" width="16" height="21" rx="5.5"/></svg></span><h3>Let it settle behind.</h3><p>The pod sits on the bone just behind your ear, and your ear stays open.</p></div>
+      <picture class="fitc-media"><source media="(max-width:860px)" srcset="media/fit-rest-640.webp 640w, media/fit-rest-1000.webp 1000w" sizes="86vw"><img src="media/fitw-rest-1100.webp" srcset="media/fitw-rest-1100.webp 1100w, media/fitw-rest-2200.webp 2200w" sizes="min(84vw, 1100px)" width="1672" height="941" loading="lazy" alt="Still resting behind the ear, the ear itself left open."></picture>
+      <span class="fitc-ai">AI-generated visualisation</span>
+    </li>
+    <li class="fitc-card" data-i="2" aria-roledescription="slide" aria-label="3 of 3">
+      <div class="fitc-cap"><span class="glyph g3" aria-hidden="true"><svg viewBox="0 0 48 48"><circle class="g-ring" cx="33.2" cy="21" r="8" pathLength="40"/><rect class="g-body" x="13" y="9" width="20" height="29" rx="6.5"/><rect class="g-btn" x="31.6" y="16.5" width="2.6" height="9" rx="1.3"/><circle class="g-light" cx="19.5" cy="32" r="1.6"/></svg></span><h3>Press once.</h3><p>A soft light tells you it's on, and a gentle, continuous vibration begins.</p></div>
+      <picture class="fitc-media"><source media="(max-width:860px)" srcset="media/fit-press-640.webp 640w, media/fit-press-1000.webp 1000w" sizes="86vw"><img src="media/fitw-press-1100.webp" srcset="media/fitw-press-1100.webp 1100w, media/fitw-press-2200.webp 2200w" sizes="min(84vw, 1100px)" width="1672" height="941" loading="lazy" alt="Close on the side of Still: the single long button."></picture>
+      
+    </li>
+  </ol>
+  <div class="fitc-ctl" aria-label="Carousel controls">
+    <div class="fitc-dots glass" role="group" aria-label="Steps">
+      <button type="button" class="fitc-dot" data-i="0" aria-label="Step 1, Hook it over either ear"><i></i></button>
+      <button type="button" class="fitc-dot" data-i="1" aria-label="Step 2, Let it settle behind"><i></i></button>
+      <button type="button" class="fitc-dot" data-i="2" aria-label="Step 3, Press once"><i></i></button>
+    </div>
+    <button type="button" class="fitc-play glass" aria-label="Pause"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4.2" y="3.2" width="2.5" height="9.6" rx="1"/><rect x="9.3" y="3.2" width="2.5" height="9.6" rx="1"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 3.6v8.8c0 .55.6.88 1.06.58l6.8-4.4a.7.7 0 0 0 0-1.16l-6.8-4.4c-.46-.3-1.06.03-1.06.58z"/></svg><svg class="i-replay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 6.2A4.9 4.9 0 1 1 3.4 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3.2 2.8v3.6h3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
 </section>
 
 <!-- The one number -->
@@ -826,10 +904,10 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
       <p class="ai-note">App interface concept. Battery and session values are illustrative.</p>
     </div>
     <div class="phones" aria-hidden="true">
-      <div class="phone p-lock rv" style="--d:0ms"><img src="media/ui-lock-600.webp" width="600" height="1231" loading="lazy" alt=""></div>
-      <div class="phone p-home rv" style="--d:120ms"><img src="media/ui-home-600.webp" width="600" height="1231" loading="lazy" alt=""></div>
-      <div class="phone p-set rv" style="--d:240ms"><img src="media/ui-settings-600.webp" width="600" height="1231" loading="lazy" alt=""></div>
-      <img class="app-device rv" style="--d:360ms" src="media/device-443.webp" width="443" height="569" loading="lazy" alt="">
+      <div class="phone p-lock rv" style="--d:0ms"><img src="media/ui-lock-1000.webp" width="1000" height="2051" loading="lazy" alt=""></div>
+      <div class="phone p-home rv" style="--d:120ms"><img src="media/ui-home-1000.webp" width="1000" height="2051" loading="lazy" alt=""></div>
+      <div class="phone p-set rv" style="--d:240ms"><img src="media/ui-settings-1000.webp" width="1000" height="2051" loading="lazy" alt=""></div>
+      <img class="app-device rv" style="--d:360ms" src="media/device-886.webp" width="886" height="1138" loading="lazy" alt="">
     </div>
   </div>
 </section>
@@ -843,8 +921,8 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
       <p class="fine">Final contents confirmed before launch.</p>
     </div>
     <div class="boxes rv" aria-hidden="false">
-      <img class="box-closed" src="media/box-closed-679.webp" width="679" height="672" loading="lazy" alt="The closed pine box, with the Still signature on the lid.">
-      <img class="box-open" src="media/box-open-875.webp" srcset="media/box-open-875.webp 875w" sizes="(max-width:860px) 70vw, 420px" width="875" height="849" loading="lazy" alt="The open box: Still resting in an ivory moulded tray.">
+      <img class="box-closed" src="media/box-closed-1358.webp" width="1358" height="1344" loading="lazy" alt="The closed pine box, with the Still signature on the lid.">
+      <img class="box-open" src="media/box-open-1750.webp" width="1750" height="1698" loading="lazy" alt="The open box: Still resting in an ivory moulded tray.">
     </div>
   </div>
 </section>
@@ -871,7 +949,7 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 
 <!-- Join -->
 <section class="sec join" id="join" aria-labelledby="h-join">
-  <img class="join-img" src="media/calm-1672.webp" srcset="media/calm-960.webp 960w, media/calm-1672.webp 1672w" sizes="(max-width:860px) 160vw, 80vw" width="1672" height="941" loading="lazy" alt="A woman with her eyes closed, calm, wearing Still behind her ear.">
+  <img class="join-img" src="media/calm-1672.webp" srcset="media/calm-960.webp 960w, media/calm-1672.webp 1672w, media/calm-2800.webp 2800w" sizes="(max-width:860px) 160vw, 80vw" width="1672" height="941" loading="lazy" alt="A woman with her eyes closed, calm, wearing Still behind her ear.">
   <div class="wrap join-copy rv">
     <h2 id="h-join">Be one of the first to try it.</h2>
     <p class="body">Leave your email and we'll let you know when Still is ready.</p>
@@ -1284,6 +1362,77 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
     if (document.hidden) figs.forEach(function (f) { var v = f.querySelector('video'); if (!v.paused) { v.pause(); f.__resume = true; } });
     else figs.forEach(function (f) { if (f.__resume) { f.__resume = false; var v = f.querySelector('video'); if (wants(f, window.innerHeight)) v.play().catch(function () {}); } });
   });
+})();
+
+/* How it fits, as Apple's highlights: while the section is well in view the cards move on every 5.5 s, the current
+   dot stretching and filling as it goes. It stops on the last card with a replay button. Swiping, scrolling the row
+   or tapping a dot takes over: the row goes where you put it and the timer pauses. Reduced motion never moves on. */
+(function () {
+  'use strict';
+  var sec = document.querySelector('.fitc'); if (!sec) return;
+  var track = sec.querySelector('.fitc-track'), cards = [].slice.call(sec.querySelectorAll('.fitc-card')),
+      dots = [].slice.call(sec.querySelectorAll('.fitc-dot')), play = sec.querySelector('.fitc-play');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DUR = 5500, cur = -1, timer = 0, startedAt = 0, left = DUR, inView = false, programmatic = 0;
+  function setState(s) {
+    sec.setAttribute('data-state', s);
+    play.setAttribute('aria-label', s === 'playing' ? 'Pause' : s === 'ended' ? 'Play again' : 'Play');
+  }
+  function light(i) {
+    if (i === cur) return; cur = i;
+    cards.forEach(function (c, k) {
+      var on = k === i;
+      if (on && !reduce) { c.classList.add('replay'); c.classList.remove('lit'); void c.offsetWidth; c.classList.remove('replay'); c.classList.add('lit'); }
+      else if (on) c.classList.add('lit');
+    });
+    dots.forEach(function (d, k) { d.classList.toggle('on', k === i); d.setAttribute('aria-current', k === i ? 'step' : 'false'); var f = d.querySelector('i'); f.style.animation = 'none'; void f.offsetWidth; f.style.animation = ''; });
+  }
+  function offsetOf(i) { return cards[i].offsetLeft - cards[0].offsetLeft; }
+  function go(i, smooth) {
+    programmatic = performance.now();
+    track.scrollTo({ left: offsetOf(i), behavior: smooth && !reduce ? 'smooth' : 'auto' });
+    light(i);
+  }
+  function schedule(ms) {
+    clearTimeout(timer); startedAt = performance.now(); left = ms;
+    timer = setTimeout(function () {
+      if (cur >= cards.length - 1) { setState('ended'); return; }
+      go(cur + 1, true); schedule(DUR);
+    }, ms);
+  }
+  function pause() { if (sec.getAttribute('data-state') !== 'playing') return; clearTimeout(timer); left = Math.max(0, left - (performance.now() - startedAt)); setState('paused'); }
+  function resume() { if (reduce) return; setState('playing'); schedule(left); }
+  // nearest card to the row's start, when the reader scrolls the row themselves
+  var raf = 0;
+  track.addEventListener('scroll', function () {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function () {
+      var x = track.scrollLeft, best = 0, d = Infinity;
+      cards.forEach(function (c, k) { var dd = Math.abs(offsetOf(k) - x); if (dd < d) { d = dd; best = k; } });
+      if (performance.now() - programmatic > 900) { if (best !== cur) { pause(); left = DUR; light(best); } }
+    });
+  }, { passive: true });
+  ['pointerdown', 'wheel', 'touchstart'].forEach(function (t) { track.addEventListener(t, function (e) { if (t === 'wheel' && Math.abs(e.deltaX) < Math.abs(e.deltaY)) return; pause(); }, { passive: true }); });
+  dots.forEach(function (d, k) { d.addEventListener('click', function () { var was = sec.getAttribute('data-state'); go(k, true); left = DUR; if (was === 'playing') schedule(DUR); else setState(k === cards.length - 1 && was === 'ended' ? 'ended' : 'paused'); }); });
+  play.addEventListener('click', function () {
+    var s = sec.getAttribute('data-state');
+    if (s === 'playing') pause();
+    else if (s === 'ended') { go(0, true); setState('playing'); schedule(DUR); }
+    else { if (left <= 0) left = DUR; resume(); }
+  });
+  light(0);
+  if (reduce || !('IntersectionObserver' in window)) { sec.classList.add('static'); setState('paused'); return; }
+  setState('paused');
+  // starts when the row is well into view; pauses itself while out of view
+  new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      var was = inView; inView = e.intersectionRatio >= 0.55;
+      if (inView && !was && !sec.__started) { sec.__started = true; setState('playing'); schedule(DUR); }
+      else if (inView && !was && sec.__autoPaused) { sec.__autoPaused = false; resume(); }
+      else if (!inView && was && sec.getAttribute('data-state') === 'playing') { pause(); sec.__autoPaused = true; }
+    });
+  }, { threshold: [0, 0.55, 1] }).observe(track);
+  document.addEventListener('visibilitychange', function () { if (document.hidden && sec.getAttribute('data-state') === 'playing') { pause(); sec.__autoPaused = true; } });
 })();
 
 </script>
