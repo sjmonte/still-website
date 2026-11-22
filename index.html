@@ -757,6 +757,92 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 .fitc .glyph{display:block}
 @media (min-width:861px){.fitc-cap{max-width:min(26%,300px)}}
 
+/* ===== Round 7 ===== */
+/* Films on a phone in Low Power Mode play as a picture of the same film, then rest on a picture of the last frame.
+   Both sit exactly over the video and are shown only while they are needed. */
+.film-alt{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none;z-index:0;background:transparent}
+.film-end{z-index:1}
+[data-alt="playing"] .film-mov,[data-alt="ended"] .film-end,[data-alt="still"] .film-end{opacity:1}
+@media (max-width:860px){.interlude .film .film-alt{height:auto;aspect-ratio:16/9}}
+
+/* Phone hero, after the laptop: the film opens big and passes behind the words; as the whole device comes into
+   view (2.2 s in) it eases down to rest between the headline and the buttons. The script measures each phone. */
+@media (max-width:860px){
+  .hero-full .hero-film video,.hero-full .hero-film .film-alt{transform-origin:50.7% 45.3%;transform:none;transition:none;will-change:transform}
+  .hero-full.settled .hero-film video,.hero-full.settled .hero-film .film-alt{transform:translateY(var(--sy,0px)) scale(var(--ss,1));
+    transition:transform 1.9s cubic-bezier(.42,0,.18,1)}
+  .hero-full.settle-now .hero-film video,.hero-full.settle-now .hero-film .film-alt{transition:none}
+}
+@media (max-width:960px) and (orientation:landscape) and (max-height:500px){
+  .hero-full.settled .hero-film video,.hero-full.settled .hero-film .film-alt{transform:none}
+}
+
+/* How it fits: the controls pop up a second after the cards start moving, exactly like the films' */
+.fitc-dots,.fitc-play{opacity:0;transform:translateY(calc(100% + 44px)) scale(.6);transform-origin:50% 100%;
+  transition:opacity .25s ease-out,transform .66s cubic-bezier(.3,1.22,.58,1)}
+.fitc-play{transition-delay:.05s}
+.fitc-ctl.show .fitc-dots,.fitc-ctl.show .fitc-play{opacity:1;transform:none}
+.fitc-dot,.fitc-play svg{transition:opacity .35s var(--ease),transform .45s var(--ease),width .5s var(--ease),background-color .3s ease}
+.fitc-ctl:not(.ready) .fitc-dot{opacity:0;transform:scale(.5)}
+.fitc-ctl:not(.ready) .fitc-play svg{opacity:0!important;transform:scale(.7)!important}
+.fitc-dot:nth-child(2){transition-delay:.04s}.fitc-dot:nth-child(3){transition-delay:.08s}
+.fitc.held .fitc-dot.on i{animation-play-state:paused}
+
+/* Step glyphs 1 and 2: the device itself, drawn as it is (pod and open hook), over a quiet outline of an ear.
+   1: the ear draws, then the device comes down over the top of it, turning gently into place.
+   2: the device arrives from behind the ear and settles; then the ear's opening draws, because it stays open. */
+.fitc .glyph .g-ear,.fitc .glyph .g-ear2{fill:none;stroke:var(--sage-mid);stroke-width:1.6;stroke-dasharray:1;stroke-dashoffset:0}
+.fitc .glyph .g-hook{fill:none;stroke:currentColor;stroke-width:3.4}
+.fitc .glyph .g-pd{fill:currentColor;stroke:none}
+.fitc .glyph .g-dev{transform-box:view-box;transform-origin:27.5px 9px}
+.js .fitc-card .g1 .g-ear{stroke-dashoffset:1;transition:stroke-dashoffset 1.1s var(--ease) .15s}
+.js .fitc-card .g1 .g-ear2{stroke-dashoffset:1;transition:stroke-dashoffset .8s var(--ease) .5s}
+.js .fitc-card .g1 .g-dev{opacity:0;transform:translate(1.5px,-6px) rotate(-13deg);transition:opacity .8s var(--ease) .55s,transform 1.6s var(--ease) .55s}
+.js .fitc-card .g2 .g-ear2{stroke-dashoffset:1;transition:stroke-dashoffset .9s var(--ease) 1.25s}
+.js .fitc-card .g2 .g-dev{opacity:0;transform:translateX(-6px);transition:opacity .8s var(--ease) .2s,transform 1.5s var(--ease) .2s}
+.js .fitc-card.lit .g1 .g-ear,.js .fitc-card.lit .g1 .g-ear2,.js .fitc-card.lit .g2 .g-ear2{stroke-dashoffset:0}
+.js .fitc-card.lit .g1 .g-dev,.js .fitc-card.lit .g2 .g-dev{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .js .fitc-card .g-ear,.js .fitc-card .g-ear2{stroke-dashoffset:0!important}
+  .js .fitc-card .g-dev{opacity:1!important;transform:none!important}
+}
+
+/* Phone menu: Menu softly turns into Close (the same coming-into-focus as the words on the page), the list fades
+   down into place, and its links come into focus one after another */
+.menu-btn{position:relative;display:none;place-items:center}
+.menu-btn .mb-t{grid-area:1/1;transition:opacity .45s var(--ease),filter .45s var(--ease),transform .5s var(--ease)}
+.menu-btn .mb-close,.menu-btn.on .mb-open{opacity:0;filter:blur(4px);transform:translateY(-.35em)}
+.menu-btn .mb-close{transform:translateY(.35em)}
+.menu-btn.on .mb-close{opacity:1;filter:none;transform:none}
+@media (max-width:860px){
+  .menu-btn{display:inline-grid}
+  .nav ul,.nav.open ul{display:flex}
+  .nav ul{visibility:hidden;opacity:0;transform:translateY(-8px);pointer-events:none;
+    transition:opacity .3s ease,transform .45s var(--ease),visibility 0s linear .45s}
+  .nav.open ul{visibility:visible;opacity:1;transform:none;pointer-events:auto;transition:opacity .35s ease,transform .5s var(--ease),visibility 0s}
+  .nav ul a{opacity:0;filter:blur(6px);transform:translateY(.25em);transition:opacity .3s ease,filter .3s ease,transform .3s ease}
+  .nav.open ul a{opacity:1;filter:none;transform:none;transition:opacity .7s var(--ease),filter .7s var(--ease),transform .7s var(--ease);transition-delay:calc(.08s + var(--i,0) * .06s)}
+}
+@media (prefers-reduced-motion:reduce){.menu-btn .mb-t,.nav ul,.nav ul a{transition:none!important;filter:none!important}}
+
+/* Join on a phone: like the laptop, her hair meets the top edge of the sage, with no gap above her head; her
+   shoulders soften into the sage just above the words */
+@media (max-width:860px){
+  .join{padding-top:0}
+  .join-img{margin-top:0;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 80%,transparent 100%)}
+  .join-copy{margin-top:-3vw}
+}
+/* and on arrival, Menu comes into focus with the page */
+@keyframes mb-in{from{opacity:0;filter:blur(6px);transform:translateY(.3em)}}
+@media (max-width:860px){.js .menu-btn .mb-open{animation:mb-in 1.2s var(--ease) .3s backwards}}
+@media (prefers-reduced-motion:reduce){.js .menu-btn .mb-open{animation:none}}
+/* an outline waiting to draw shows nothing at all (its round ends would otherwise show as dots) */
+.js .fitc-card .g1 .g-ear{opacity:0;transition:stroke-dashoffset 1.1s var(--ease) .15s,opacity .2s ease .15s}
+.js .fitc-card .g1 .g-ear2{opacity:0;transition:stroke-dashoffset .8s var(--ease) .5s,opacity .2s ease .5s}
+.js .fitc-card .g2 .g-ear2{opacity:0;transition:stroke-dashoffset .9s var(--ease) 1.25s,opacity .2s ease 1.25s}
+.js .fitc-card.lit .g1 .g-ear,.js .fitc-card.lit .g1 .g-ear2,.js .fitc-card.lit .g2 .g-ear2{opacity:1}
+@media (prefers-reduced-motion:reduce){.js .fitc-card .g-ear,.js .fitc-card .g-ear2{opacity:1!important}}
+
 </style>
 </head>
 <body>
@@ -768,7 +854,7 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   <div class="wrap">
     <a class="sig-link" href="#top" aria-label="Still, home"><svg viewBox="0 0 1333.50 237.00" aria-hidden="true"><use href="#sig"/></svg></a>
     <nav class="nav" aria-label="Main">
-      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-list" aria-label="Menu"><span class="mb-t mb-open" aria-hidden="true">Menu</span><span class="mb-t mb-close" aria-hidden="true">Close</span></button>
       <ul id="nav-list">
         <li><a href="#device">The device</a></li>
         <li><a href="#fit">How it fits</a></li>
@@ -784,7 +870,7 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 
 <!-- Hero: the film is the page's first moment; the words arrive as the device settles -->
 <section class="hero hero-full" aria-labelledby="h-hero">
-  <figure class="film hero-film" data-film><video muted playsinline preload="auto" poster="media/film/the-other-side-start-v03.webp" data-end="media/film/the-other-side-end-v03.webp" width="1920" height="1080" aria-label="A close view of the open hook gives way to the whole of Still turning gently to face the camera, then resting: a matte pine-black pod with a single side button and an open silicone hook, on warm ivory."><source src="media/film/still_film_the-other-side_16x9_v05_phone.mp4" type="video/mp4" media="(max-width:860px)"><source src="media/film/still_film_the-other-side_16x9_v05.mp4" type="video/mp4"></video><div class="film-ctl"><button class="film-btn glass" type="button" aria-label="Pause film" tabindex="-1"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4.2" y="3.2" width="2.5" height="9.6" rx="1"/><rect x="9.3" y="3.2" width="2.5" height="9.6" rx="1"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 3.6v8.8c0 .55.6.88 1.06.58l6.8-4.4a.7.7 0 0 0 0-1.16l-6.8-4.4c-.46-.3-1.06.03-1.06.58z"/></svg><svg class="i-replay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 6.2A4.9 4.9 0 1 1 3.4 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3.2 2.8v3.6h3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="film-pill glass" aria-hidden="true"><span class="film-bar"><i></i></span></span></div></figure>
+  <figure class="film hero-film" data-film data-dur="6.04"><video muted playsinline preload="auto" poster="media/film/the-other-side-start-v03.webp" data-end="media/film/the-other-side-end-v03.webp" width="1920" height="1080" aria-label="A close view of the open hook gives way to the whole of Still turning gently to face the camera, then resting: a matte pine-black pod with a single side button and an open silicone hook, on warm ivory."><source src="media/film/still_film_the-other-side_16x9_v05_phone.mp4" type="video/mp4" media="(max-width:860px)"><source src="media/film/still_film_the-other-side_16x9_v05.mp4" type="video/mp4"></video><div class="film-ctl"><button class="film-btn glass" type="button" aria-label="Pause film" tabindex="-1"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4.2" y="3.2" width="2.5" height="9.6" rx="1"/><rect x="9.3" y="3.2" width="2.5" height="9.6" rx="1"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 3.6v8.8c0 .55.6.88 1.06.58l6.8-4.4a.7.7 0 0 0 0-1.16l-6.8-4.4c-.46-.3-1.06.03-1.06.58z"/></svg><svg class="i-replay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 6.2A4.9 4.9 0 1 1 3.4 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3.2 2.8v3.6h3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="film-pill glass" aria-hidden="true"><span class="film-bar"><i></i></span></span></div></figure>
   <div class="wrap hero-copy">
     <div class="hero-top">
       <p class="label hc">In development</p>
@@ -846,12 +932,12 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   </div>
   <ol class="fitc-track" aria-roledescription="carousel" aria-label="How Still fits, in three steps">
     <li class="fitc-card" data-i="0" aria-roledescription="slide" aria-label="1 of 3">
-      <div class="fitc-cap"><span class="glyph g1" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="g-draw" pathLength="1" d="M16 21 C16 10 23 6.5 29.5 8 C36.5 9.5 39.5 17 36.5 25.5 C34.8 30.5 31.8 34.5 28.5 39"/><rect class="g-pod" x="9.5" y="20" width="13" height="17" rx="4.6"/></svg></span><h3>Hook it over either ear.</h3><p>The silicone hook rests over the top.</p></div>
+      <div class="fitc-cap"><span class="glyph g1" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="g-ear" pathLength="1" d="M33.5 13.5 C28 11.6 22.6 15.4 22.6 22.2 C22.6 27.6 25.6 29.4 26.6 33.2 C27.4 36.4 30.6 37.6 32.6 35.4"/><path class="g-ear2" pathLength="1" d="M30.6 19.6 C27.8 19.4 26.8 22.6 28.4 25.2"/><g class="g-dev"><path class="g-hook" d="M15.5 20 C15.5 10 21.5 6.6 27.5 7.4 C33.5 8.2 37 13.5 36.2 20 C35.6 25 34.2 28.6 33.8 33"/><rect class="g-pd" x="9" y="19.5" width="13" height="18" rx="4.6"/></g></svg></span><h3>Hook it over either ear.</h3><p>The silicone hook rests over the top.</p></div>
       <picture class="fitc-media"><source media="(max-width:860px)" srcset="media/fit-hook-640.webp 640w, media/fit-hook-1000.webp 1000w" sizes="86vw"><img src="media/fitw-hook-1100.webp" srcset="media/fitw-hook-1100.webp 1100w, media/fitw-hook-2200.webp 2200w" sizes="min(84vw, 1100px)" width="1672" height="941" loading="lazy" alt="A hand guides the silicone hook over the top of the ear."></picture>
       <span class="fitc-ai">AI-generated visualisation</span>
     </li>
     <li class="fitc-card" data-i="1" aria-roledescription="slide" aria-label="2 of 3">
-      <div class="fitc-cap"><span class="glyph g2" aria-hidden="true"><svg viewBox="0 0 48 48"><ellipse class="g-shadow" cx="24" cy="38.6" rx="9" ry="1.6"/><path class="g-base" pathLength="1" d="M8 40.5 H40"/><rect class="g-drop" x="16" y="17" width="16" height="21" rx="5.5"/></svg></span><h3>Let it settle behind.</h3><p>The pod sits on the bone just behind your ear, and your ear stays open.</p></div>
+      <div class="fitc-cap"><span class="glyph g2" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="g-ear" pathLength="1" d="M33.5 13.5 C28 11.6 22.6 15.4 22.6 22.2 C22.6 27.6 25.6 29.4 26.6 33.2 C27.4 36.4 30.6 37.6 32.6 35.4"/><path class="g-ear2" pathLength="1" d="M30.6 19.6 C27.8 19.4 26.8 22.6 28.4 25.2"/><g class="g-dev"><path class="g-hook" d="M15.5 20 C15.5 10 21.5 6.6 27.5 7.4 C33.5 8.2 37 13.5 36.2 20 C35.6 25 34.2 28.6 33.8 33"/><rect class="g-pd" x="9" y="19.5" width="13" height="18" rx="4.6"/></g></svg></span><h3>Let it settle behind.</h3><p>The pod sits on the bone just behind your ear, and your ear stays open.</p></div>
       <picture class="fitc-media"><source media="(max-width:860px)" srcset="media/fit-rest-640.webp 640w, media/fit-rest-1000.webp 1000w" sizes="86vw"><img src="media/fitw-rest-1100.webp" srcset="media/fitw-rest-1100.webp 1100w, media/fitw-rest-2200.webp 2200w" sizes="min(84vw, 1100px)" width="1672" height="941" loading="lazy" alt="Still resting behind the ear, the ear itself left open."></picture>
       <span class="fitc-ai">AI-generated visualisation</span>
     </li>
@@ -889,7 +975,7 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 <!-- A breath: five in unison -->
 <section class="interlude" aria-label="Still, five in unison">
   <div class="wrap wide">
-    <figure class="film rv" data-film><video muted playsinline preload="none" poster="media/film/five-in-unison-start-v03.webp" data-end="media/film/five-in-unison-end-v03.webp" width="1920" height="1080" aria-label="One Still separates into five identical devices that fan out in an even row, then gather back into a single device at rest on warm ivory."><source src="media/film/still_film_five-in-unison_16x9_v04_phone.mp4" type="video/mp4" media="(max-width:860px)"><source src="media/film/still_film_five-in-unison_16x9_v04.mp4" type="video/mp4"></video><div class="film-ctl"><button class="film-btn glass" type="button" aria-label="Pause film" tabindex="-1"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4.2" y="3.2" width="2.5" height="9.6" rx="1"/><rect x="9.3" y="3.2" width="2.5" height="9.6" rx="1"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 3.6v8.8c0 .55.6.88 1.06.58l6.8-4.4a.7.7 0 0 0 0-1.16l-6.8-4.4c-.46-.3-1.06.03-1.06.58z"/></svg><svg class="i-replay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 6.2A4.9 4.9 0 1 1 3.4 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3.2 2.8v3.6h3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="film-pill glass" aria-hidden="true"><span class="film-bar"><i></i></span></span></div></figure>
+    <figure class="film rv" data-film data-dur="6.04"><video muted playsinline preload="none" poster="media/film/five-in-unison-start-v03.webp" data-end="media/film/five-in-unison-end-v03.webp" width="1920" height="1080" aria-label="One Still separates into five identical devices that fan out in an even row, then gather back into a single device at rest on warm ivory."><source src="media/film/still_film_five-in-unison_16x9_v04_phone.mp4" type="video/mp4" media="(max-width:860px)"><source src="media/film/still_film_five-in-unison_16x9_v04.mp4" type="video/mp4"></video><div class="film-ctl"><button class="film-btn glass" type="button" aria-label="Pause film" tabindex="-1"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4.2" y="3.2" width="2.5" height="9.6" rx="1"/><rect x="9.3" y="3.2" width="2.5" height="9.6" rx="1"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.2 3.6v8.8c0 .55.6.88 1.06.58l6.8-4.4a.7.7 0 0 0 0-1.16l-6.8-4.4c-.46-.3-1.06.03-1.06.58z"/></svg><svg class="i-replay" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 6.2A4.9 4.9 0 1 1 3.4 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3.2 2.8v3.6h3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="film-pill glass" aria-hidden="true"><span class="film-bar"><i></i></span></span></div></figure>
   </div>
 </section>
 
@@ -1001,15 +1087,15 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   function onScroll() { head.classList.toggle('scrolled', window.scrollY > 8); }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  /* Phone menu */
+  /* Phone menu: the word softly turns from Menu to Close, and the links come into focus one after another */
   var nav = document.querySelector('.nav'), menuBtn = document.querySelector('.menu-btn');
-  function closeMenu() { nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; }
-  menuBtn.addEventListener('click', function () {
-    var open = !nav.classList.contains('open');
-    nav.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    menuBtn.textContent = open ? 'Close' : 'Menu';
-  });
-  nav.querySelectorAll('ul a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+  function setMenu(open) {
+    nav.classList.toggle('open', open); menuBtn.classList.toggle('on', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+  }
+  function closeMenu() { setMenu(false); }
+  menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+  nav.querySelectorAll('ul a').forEach(function (a, i) { a.style.setProperty('--i', i); a.addEventListener('click', closeMenu); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
 
   /* Words come into focus one at a time */
@@ -1050,30 +1136,56 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
     // On phones the device sits in the band between the headline and the words below it; measure that band
     // (headlines and buttons wrap differently on each phone) and let the CSS size the film to it.
     function band() {
-      // Phones held upright: make the film as big as the screen allows. The settled device spans 7.6% to 83% of the
-      // film's height and 35% of its width; it starts just under the words above it, may pass behind the buttons,
-      // and stays inside the screen's width.
+      // Phones held upright, after the laptop: the film opens big, its close-up filling the screen and passing behind
+      // the words and buttons; then, as the whole device comes into view, it eases down to rest between the headline
+      // and the buttons, never covered by them. The settled device spans 7.7% to 82.9% of the film's height and its
+      // centre sits at 50.7% across and 45.3% down; it stays inside the screen's width.
       var w = window.innerWidth, h = window.innerHeight;
-      if (w > 860 || (w > h && h <= 500)) { hero.style.removeProperty('--fh'); hero.style.removeProperty('--fy'); return; }
+      if (w > 860 || (w > h && h <= 500)) { ['--fh', '--fy', '--ss', '--sy'].forEach(function (k) { hero.style.removeProperty(k); }); return; }
       var H = hero.getBoundingClientRect(), bt = 0, act = hero.querySelector('.actions');
       ['.label', 'h1', '.lede'].forEach(function (q) { var e = hero.querySelector(q); if (e && e.offsetParent !== null) bt = Math.max(bt, e.getBoundingClientRect().bottom - H.top); });
       if (!bt || !act) return;
       bt += 12;
       var actTop = act.getBoundingClientRect().top - H.top, floor = H.height - 22;
       var fh = Math.min((floor - bt) / 0.754, (w - 6) / 0.63), dev = 0.754 * fh;
-      var room = actTop - 10 - bt;   // if the device fits above the buttons, keep it there; otherwise let it pass behind them
+      var room = actTop - 30 - bt;
       var top = dev <= room ? bt + (room - dev) / 2 : bt + Math.max(0, (floor - bt - dev) / 2);
+      var fy = top - 0.076 * fh + fh / 2;
       hero.style.setProperty('--fh', Math.round(fh) + 'px');
-      hero.style.setProperty('--fy', Math.round(top - 0.076 * fh + fh / 2) + 'px');
+      hero.style.setProperty('--fy', Math.round(fy) + 'px');
+      // where it comes to rest: as big as the space between the headline and the buttons allows
+      var s = Math.min(1, Math.max(0.4, room / dev)), from = top + dev / 2, to = bt + room / 2;
+      if (s >= 0.999) to = from;
+      hero.style.setProperty('--ss', s.toFixed(4));
+      hero.style.setProperty('--sy', Math.round(to - from) + 'px');
     }
     band(); window.addEventListener('resize', band); if (document.fonts && document.fonts.ready) document.fonts.ready.then(band);
     function show() { if (done) return; done = true; hero.classList.add('copy-in'); if (h1) h1.classList.add('in'); }
-    if (reduce || !v) { show(); return; }
-    var AT = 2.5;
-    v.addEventListener('timeupdate', function () { if (v.currentTime >= AT) show(); });
-    (function watch() { if (done) return; if (!v.paused && v.currentTime >= AT) { show(); return; } requestAnimationFrame(watch); })();
-    setTimeout(function () { if (v.paused || v.currentTime < 0.05) show(); }, 2400);   // a slow connection: the words don't wait for the film
-    var fig = v.closest('[data-film]'); if (fig) fig.addEventListener('stillblocked', show);
+    var fig = v ? v.closest('[data-film]') : null;
+    function settleNow() { hero.classList.add('settled', 'settle-now'); }
+    if (reduce || !v) { settleNow(); show(); return; }
+    // the film's own clock (the video, or the picture version a phone in Low Power Mode plays instead)
+    function clock() { return fig && fig.__clock ? fig.__clock() : v.currentTime; }
+    function moving() { return (!v.paused && !v.ended) || (fig && fig.getAttribute('data-alt') === 'playing'); }
+    var AT = 2.5, SETTLE = 2.2, raf = 0;   // the close-up gives way to the whole device at 2.2 s
+    function frame() {
+      raf = 0;
+      var t = clock(), go = moving();
+      if (go && t < SETTLE - 0.1 && hero.classList.contains('settled')) hero.classList.remove('settled', 'settle-now');   // played again
+      if (t >= SETTLE && !hero.classList.contains('settled')) hero.classList.add('settled');
+      if (go && t >= AT) show();
+      if (go) raf = requestAnimationFrame(frame);
+    }
+    function run() { if (!raf) raf = requestAnimationFrame(frame); }
+    v.addEventListener('play', run); v.addEventListener('playing', run); v.addEventListener('seeked', run);
+    if (fig) {
+      fig.addEventListener('stillaltplay', run);
+      fig.addEventListener('stillend', function () { settleNow(); show(); });
+    }
+    run();
+    // a slow connection: the words don't wait for a film that hasn't started
+    setTimeout(function () { if (!moving() && clock() < 0.05 && !(fig && fig.getAttribute('data-alt') === 'loading')) show(); }, 2400);
+    setTimeout(function () { if (!moving() && clock() < 0.05) show(); }, 5000);
     window.addEventListener('scroll', function () { if (window.scrollY > 60) show(); }, { passive: true });
   })();
 
@@ -1194,15 +1306,16 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 })();
 
 /* Films: each plays once when it is well into view, then rests on its last frame.
-   A small control appears while it plays: pause, play, or replay, with a slim progress bar.
+   A small control pops up a second after a film starts: pause, play, or replay, with a slim progress bar.
    Reduced motion shows the finished frame and never plays.
 
    Phones need more care than laptops, and every case below has been seen on a real iPhone:
    - A film starts the moment it is wanted. Nothing waits for buffering events, which iOS often never sends.
    - iPhone Low Power Mode (and some in-app browsers) refuse to start any video until the reader touches the page.
-     Then the film rests on its settled last frame with a play button, never on its first frame, and the words appear
-     at once. The reader's first touch anywhere unlocks every film on the page: the one in view starts from the
-     beginning, and the others then start by themselves when they are scrolled to, exactly as on a laptop. */
+     Safari still animates a video file shown as a picture, so the same film plays as a picture instead, once,
+     and then rests on its last frame, exactly as the video would. If even that is refused, the film rests on its
+     settled last frame with a play button. The reader's first touch unlocks the real video for every film not yet
+     reached, and a tap on a film's control hands over to the real video at the same moment of the film. */
 (function () {
   'use strict';
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1210,37 +1323,113 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   var LABEL = { playing: 'Pause film', paused: 'Play film', ended: 'Play film again' };
   var phone = function () { return window.innerWidth <= 860; };
   function onLift() { if (window.__stillLift) window.__stillLift(); }
-
-  function toEnd(v) {   // show the settled last frame without playing
-    function go() { try { v.currentTime = Math.max(0, v.duration - 0.05); } catch (e) {} }
-    if (v.readyState >= 1 && isFinite(v.duration)) go(); else v.addEventListener('loadedmetadata', go, { once: true });
+  function durOf(fig) { var v = fig.querySelector('video'); return (v && isFinite(v.duration) && v.duration > 0) ? v.duration : (parseFloat(fig.getAttribute('data-dur')) || 6); }
+  function srcOf(v) {   // the file this screen would play
+    if (v.currentSrc) return v.currentSrc;
+    var ss = v.querySelectorAll('source');
+    for (var i = 0; i < ss.length; i++) { var m = ss[i].getAttribute('media'); if (!m || window.matchMedia(m).matches) return ss[i].src; }
+    return v.src;
   }
 
   figs.forEach(function (fig) {
     var v = fig.querySelector('video'), btn = fig.querySelector('.film-btn'), bar = fig.querySelector('.film-bar i');
     v.muted = true; v.defaultMuted = true; v.playsInline = true; v.setAttribute('webkit-playsinline', '');
-    if (reduce) { v.poster = v.getAttribute('data-end'); v.removeAttribute('preload'); return; }
+    // where the film is: the real video's time, or the time since the picture version started
+    fig.__clock = function () {
+      var a = fig.getAttribute('data-alt');
+      if (a === 'playing') return Math.min(durOf(fig), (performance.now() - fig.__altT0) / 1000);
+      if (a === 'ended' || a === 'still') return durOf(fig);
+      return v.currentTime || 0;
+    };
+    if (reduce) { v.poster = v.getAttribute('data-end'); v.removeAttribute('preload'); fig.dispatchEvent(new Event('stillend')); return; }
     var raf = 0;
     function set(state) { fig.setAttribute('data-state', state); if (btn) btn.setAttribute('aria-label', LABEL[state]); }
+    fig.__set = set;
     set('paused');
-    function tick() { if (bar && v.duration) bar.style.transform = 'scaleX(' + Math.min(1, v.currentTime / v.duration).toFixed(4) + ')'; if (!v.paused && !v.ended) raf = requestAnimationFrame(tick); }
+    function tick() { if (bar) bar.style.transform = 'scaleX(' + Math.min(1, fig.__clock() / durOf(fig)).toFixed(4) + ')'; if ((!v.paused && !v.ended) || fig.getAttribute('data-alt') === 'playing') raf = requestAnimationFrame(tick); }
+    fig.__tick = function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); };
+    function ctlSoon() { if (fig.__ctlOk) return; clearTimeout(fig.__ctlT); fig.__ctlT = setTimeout(function () { fig.__ctlOk = true; onLift(); }, 1000); }
+    fig.__ctlSoon = ctlSoon;
     // the controls wait until the film has been playing for a second, so their pop up is seen, not lost in the page load
-    v.addEventListener('playing', function () { if (fig.__quiet || fig.__ctlOk) return; setTimeout(function () { fig.__ctlOk = true; onLift(); }, 1000); });
-    v.addEventListener('play', function () { if (fig.__quiet) return; set('playing'); cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); if (window.__stillLift) window.__stillLift(); });
-    v.addEventListener('pause', function () { if (fig.__quiet) return; if (!v.ended) set('paused'); cancelAnimationFrame(raf); tick(); });
+    v.addEventListener('playing', function () { if (fig.__quiet) return; if (fig.getAttribute('data-alt')) altOff(fig); ctlSoon(); });
+    v.addEventListener('play', function () { if (fig.__quiet) return; set('playing'); fig.__tick(); onLift(); });
+    v.addEventListener('pause', function () { if (fig.__quiet || fig.getAttribute('data-alt')) return; if (!v.ended) set('paused'); cancelAnimationFrame(raf); tick(); });
     v.addEventListener('ended', function () { if (fig.__quiet) return; set('ended'); cancelAnimationFrame(raf); if (bar) bar.style.transform = 'scaleX(1)'; });
     fig.__toggle = function () {
-      var st = fig.getAttribute('data-state');
+      var st = fig.getAttribute('data-state'), a = fig.getAttribute('data-alt');
+      if (a) { takeOver(fig, st === 'playing'); return; }   // the picture version: the real video takes over
       if (st === 'playing') { fig.__autoPaused = false; v.pause(); return; }
       if (st === 'ended' || fig.__fromStart) { fig.__fromStart = false; v.currentTime = 0; }
       fig.setAttribute('data-played', '1');
       v.play().catch(function () {});
     };
     if (btn) btn.addEventListener('click', function (e) { e.stopPropagation(); fig.__toggle(); });
-    v.addEventListener('click', function () { if (fig.getAttribute('data-state') !== 'playing') fig.__toggle(); });   // a tap on a resting film plays it
+    fig.addEventListener('click', function (e) { if (e.target.closest('.film-ctl')) return; if (fig.getAttribute('data-state') !== 'playing') fig.__toggle(); });   // a tap on a resting film plays it
     v.addEventListener('error', function () { v.poster = v.getAttribute('data-end'); }, true);
   });
   if (reduce) return;
+
+  /* The picture version, for phones that refuse to start a video by themselves */
+  function layer(fig, cls) {
+    var im = fig.querySelector('.' + cls); if (im) return im;
+    im = document.createElement('img'); im.className = 'film-alt ' + cls; im.alt = ''; im.setAttribute('aria-hidden', 'true');
+    fig.insertBefore(im, fig.querySelector('.film-ctl')); return im;
+  }
+  function endLayer(fig) {   // the settled last frame, as a picture on top (a paused video's frame can't be relied on)
+    var im = layer(fig, 'film-end'), src = fig.querySelector('video').getAttribute('data-end');
+    if (im.getAttribute('src') !== src) im.src = src;
+    return im;
+  }
+  function altOff(fig) {   // the real video is showing again
+    clearTimeout(fig.__altEnd); clearTimeout(fig.__altWait);
+    fig.removeAttribute('data-alt');
+    var m = fig.querySelector('.film-mov'); if (m) { m.removeAttribute('src'); m.onload = m.onerror = null; }
+  }
+  function altStill(fig) {   // nothing will play: rest on the last frame, with a play button that pops up a second later
+    clearTimeout(fig.__altWait);
+    endLayer(fig); fig.setAttribute('data-alt', 'still');
+    fig.__set('paused'); fig.__fromStart = true;
+    var m = fig.querySelector('.film-mov'); if (m) { m.onload = m.onerror = null; m.removeAttribute('src'); }
+    fig.dispatchEvent(new Event('stillend'));
+    fig.__ctlSoon(); onLift();
+  }
+  function altPlay(fig) {
+    var v = fig.querySelector('video');
+    endLayer(fig);   // fetched now, so it is ready the moment the film ends
+    var m = layer(fig, 'film-mov');
+    fig.setAttribute('data-alt', 'loading');
+    m.onload = function () {
+      if (fig.getAttribute('data-alt') !== 'loading') return;
+      clearTimeout(fig.__altWait);
+      fig.__altT0 = performance.now(); fig.setAttribute('data-alt', 'playing');
+      fig.__set('playing'); fig.__tick(); fig.__ctlSoon();
+      fig.dispatchEvent(new Event('stillaltplay'));
+      // the picture loops on its own, so the last frame takes its place just before it would start again
+      fig.__altEnd = setTimeout(function () {
+        if (fig.getAttribute('data-alt') !== 'playing') return;
+        fig.setAttribute('data-alt', 'ended'); fig.__set('ended'); fig.__fromStart = true;
+        var b = fig.querySelector('.film-bar i'); if (b) b.style.transform = 'scaleX(1)';
+        setTimeout(function () { if (fig.getAttribute('data-alt') === 'ended') m.removeAttribute('src'); }, 400);
+      }, Math.max(0, durOf(fig) * 1000 - 140));
+    };
+    m.onerror = function () { if (fig.getAttribute('data-alt') === 'loading') altStill(fig); };
+    fig.__altWait = setTimeout(function () { if (fig.getAttribute('data-alt') === 'loading') altStill(fig); }, 4500);
+    m.src = srcOf(v);
+  }
+  // A tap on the picture version's control: the real video takes over at the same moment, paused if it was playing
+  function takeOver(fig, pauseIt) {
+    var v = fig.querySelector('video'), a = fig.getAttribute('data-alt');
+    var at = (a === 'playing') ? fig.__clock() : 0;
+    clearTimeout(fig.__altEnd);
+    try { v.currentTime = Math.min(at, durOf(fig) - 0.05); } catch (e) {}
+    fig.setAttribute('data-played', '1'); fig.__blocked = false; fig.__fromStart = false;
+    var i = waiting.indexOf(fig); if (i >= 0) waiting.splice(i, 1);
+    if (pauseIt) fig.__quiet = true;
+    var p = v.play();
+    if (p && p.then) p.then(function () {
+      if (pauseIt) { v.pause(); fig.__quiet = false; altOff(fig); fig.__set('paused'); fig.__tick(); }
+    }, function () { fig.__quiet = false; });
+  }
 
   var showT = new WeakMap();
   function showCtl(fig, on) {
@@ -1252,10 +1441,10 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
 
   // Like Apple's, a film and its controls wait until the film is well into view, then it plays and the controls pop up.
   // Laptop: its top in the upper 40% of the screen and 70% of it showing. Phone: 80% of it showing and its top in the
-  // upper 60%, because a phone screen holds less. While the film's bottom edge is below the screen the controls ride
-  // above the screen's bottom edge.
+  // upper 60%, because a phone screen holds less. The hero is wanted from the moment the page opens.
   function wants(fig, vh) {
     var r = fig.getBoundingClientRect();
+    if (fig.closest('.hero-full')) return r.bottom > vh * 0.35 && r.top < vh * 0.65;
     var seen = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)) / Math.max(1, Math.min(r.height, vh));
     return phone() ? (seen >= 0.8 && r.top <= vh * 0.6) : (r.top <= vh * 0.4 && seen >= 0.7);
   }
@@ -1273,10 +1462,12 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
       // A reader who scrolls past a playing film shouldn't miss it: it pauses once it is almost out of view, and
       // carries on when it is back (from the start, if they had seen less than a second of it).
       var shown = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0)) / Math.max(1, Math.min(r.height, vh));
-      if (fig.getAttribute('data-state') === 'playing' && shown < 0.2 && !fig.__quiet) { fig.__autoPaused = true; v.pause(); }
-      else if (want && fig.__autoPaused && fig.getAttribute('data-state') === 'paused') {
-        fig.__autoPaused = false; if (v.currentTime < 1) v.currentTime = 0;
-        v.play().catch(function () {});
+      if (!fig.getAttribute('data-alt')) {
+        if (fig.getAttribute('data-state') === 'playing' && shown < 0.2 && !fig.__quiet) { fig.__autoPaused = true; v.pause(); }
+        else if (want && fig.__autoPaused && fig.getAttribute('data-state') === 'paused') {
+          fig.__autoPaused = false; if (v.currentTime < 1) v.currentTime = 0;
+          v.play().catch(function () {});
+        }
       }
       if (!fig.getAttribute('data-played') && !fig.__blocked) return;
       var has = ctl.classList.contains('show');
@@ -1285,12 +1476,15 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
         fig.__want = want; clearTimeout(fig.__wantT);
         fig.__wantT = setTimeout(function () { showCtl(fig, want); }, want ? 180 : 0);
       } else if (want === has) { fig.__want = want; clearTimeout(fig.__wantT); }
-      var below = phone() && !fig.closest('.hero-full');   // on phones, the controls sit just under the film
-      var heroAct = phone() && fig.closest('.hero-full') ? fig.closest('.hero-full').querySelector('.actions') : null;
-      if (heroAct && window.innerWidth <= window.innerHeight) {   // phone hero: just above the buttons
-        ctl.style.bottom = Math.max(8, r.bottom - heroAct.getBoundingClientRect().top + 12).toFixed(1) + 'px';
+      var hero = fig.closest('.hero-full');
+      var heroAct = phone() && hero && window.innerWidth <= window.innerHeight ? hero.querySelector('.actions') : null;
+      if (heroAct) {   // phone hero: in line with the two buttons, at the right-hand edge
+        var y = 0, e = heroAct; while (e && e !== hero) { y += e.offsetTop; e = e.offsetParent; }   // where the buttons rest (they rise 14 px as they arrive)
+        var mid = hero.getBoundingClientRect().top + y + heroAct.offsetHeight / 2, ch = (fig.querySelector('.film-btn') || ctl).offsetHeight || 40;
+        ctl.style.bottom = (r.bottom - mid - ch / 2).toFixed(1) + 'px';
         return;
       }
+      var below = phone() && !hero;   // on phones, the controls sit just under the film
       var base = below ? 6 : r.height * 0.07, gap = 28;
       var off = Math.max(0, Math.min(r.bottom - vh + gap - base, r.height * 0.62));
       ctl.style.bottom = (base + off).toFixed(1) + 'px';
@@ -1309,49 +1503,35 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
     var p = v.play(); if (p && p.catch) p.catch(function () { if (v.paused) blocked(fig); });
   }
 
-  // The phone refused to start the film on its own
+  // The phone refused to start the film on its own: play the picture version instead
   var waiting = [], anyBlocked = false;
   function blocked(fig) {
     anyBlocked = true;
-    var v = fig.querySelector('video');
-    fig.__blocked = true; fig.__fromStart = true;
-    v.poster = v.getAttribute('data-end'); toEnd(v);
-    fig.setAttribute('data-state', 'paused');
-    var b = fig.querySelector('.film-btn'); if (b) b.setAttribute('aria-label', 'Play film');
+    fig.__blocked = true;
     if (waiting.indexOf(fig) < 0) waiting.push(fig);
     fig.dispatchEvent(new Event('stillblocked'));
-    setTimeout(function () { fig.__ctlOk = true; onScrollLift(); }, 900);
+    altPlay(fig);
     onScrollLift();
   }
-  // The first touch: start the film in view from the beginning, and quietly unlock the others so they play by themselves
-  // when they are reached. A film unlocked this way that has not been seen yet plays from its start when it is wanted.
+  // The first touch quietly unlocks the real video of every film not yet reached, so each plays by itself when it is
+  // scrolled to, exactly as on a laptop. A film already playing (or resting) as a picture is left as it is.
   var unlocked = false;
   function onGesture() {
-    if (!anyBlocked || (unlocked && !waiting.length)) return;
+    if (!anyBlocked) return;
     var vh = window.innerHeight;
+    figs.forEach(function (fig) {   // a film resting with nothing played: the first touch plays it, from the start
+      if (fig.getAttribute('data-alt') === 'still' && !fig.__touched && wants(fig, vh)) { fig.__touched = true; takeOver(fig, false); }
+    });
+    if (unlocked) return;
+    unlocked = true;
     figs.forEach(function (fig) {
       var v = fig.querySelector('video');
-      if (fig.getAttribute('data-state') === 'playing' || fig.getAttribute('data-state') === 'ended') return;
-      var isWaiting = waiting.indexOf(fig) >= 0;
-      if (isWaiting && wants(fig, vh)) {
-        waiting.splice(waiting.indexOf(fig), 1); fig.__blocked = false;
-        fig.__fromStart = false; v.currentTime = 0; fig.setAttribute('data-played', '1');
-        v.play().catch(function () { if (waiting.indexOf(fig) < 0) waiting.push(fig); fig.__blocked = true; fig.__fromStart = true; });
-        return;
-      }
-      if (unlocked && !isWaiting) return;
-      // unlock: a silent play and pause inside the touch, then back to how it looked
+      if (fig.getAttribute('data-alt') || fig.getAttribute('data-state') !== 'paused' || fig.getAttribute('data-played')) return;
       var at = v.currentTime; fig.__quiet = true;
       var p = v.play();
-      if (p && p.then) p.then(function () {
-        v.pause(); try { v.currentTime = at; } catch (e) {}
-        fig.__quiet = false;
-        if (isWaiting) { waiting.splice(waiting.indexOf(fig), 1); fig.__blocked = false; fig.removeAttribute('data-played'); fig.__fromStart = true; }
-        onScrollLift();
-      }, function () { fig.__quiet = false; });
+      if (p && p.then) p.then(function () { v.pause(); try { v.currentTime = at; } catch (e) {} fig.__quiet = false; onScrollLift(); }, function () { fig.__quiet = false; });
       else fig.__quiet = false;
     });
-    unlocked = true;
   }
   ['touchend', 'click', 'keydown'].forEach(function (t) { document.addEventListener(t, onGesture, { capture: true, passive: true }); });
 
@@ -1364,20 +1544,23 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   });
 })();
 
-/* How it fits, as Apple's highlights: while the section is well in view the cards move on every 5.5 s, the current
-   dot stretching and filling as it goes. It stops on the last card with a replay button. Swiping, scrolling the row
-   or tapping a dot takes over: the row goes where you put it and the timer pauses. Reduced motion never moves on. */
+/* How it fits, as Apple's highlights: once the row is well in view the cards move on every 5.5 s, the current dot
+   stretching and filling as it goes, and a second later the controls pop up, like the films'. It stops on the last
+   card with a replay button. It never pauses itself: only the pause button pauses it. While the row is off the
+   screen the timer simply holds (the button still says pause) and carries on when it is back. A swipe or a dot goes
+   to that card and the timer starts again from there. Reduced motion never moves on. */
 (function () {
   'use strict';
   var sec = document.querySelector('.fitc'); if (!sec) return;
   var track = sec.querySelector('.fitc-track'), cards = [].slice.call(sec.querySelectorAll('.fitc-card')),
-      dots = [].slice.call(sec.querySelectorAll('.fitc-dot')), play = sec.querySelector('.fitc-play');
+      dots = [].slice.call(sec.querySelectorAll('.fitc-dot')), play = sec.querySelector('.fitc-play'), ctl = sec.querySelector('.fitc-ctl');
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var DUR = 5500, cur = -1, timer = 0, startedAt = 0, left = DUR, inView = false, programmatic = 0;
+  var DUR = 5500, cur = -1, timer = 0, startedAt = 0, left = DUR, held = false, programmatic = 0, lastR = 0;
   function setState(s) {
     sec.setAttribute('data-state', s);
     play.setAttribute('aria-label', s === 'playing' ? 'Pause' : s === 'ended' ? 'Play again' : 'Play');
   }
+  function fill(restart) { dots.forEach(function (d, k) { var f = d.querySelector('i'); if (restart || k !== cur) { f.style.animation = 'none'; void f.offsetWidth; f.style.animation = ''; } }); }
   function light(i) {
     if (i === cur) return; cur = i;
     cards.forEach(function (c, k) {
@@ -1385,7 +1568,8 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
       if (on && !reduce) { c.classList.add('replay'); c.classList.remove('lit'); void c.offsetWidth; c.classList.remove('replay'); c.classList.add('lit'); }
       else if (on) c.classList.add('lit');
     });
-    dots.forEach(function (d, k) { d.classList.toggle('on', k === i); d.setAttribute('aria-current', k === i ? 'step' : 'false'); var f = d.querySelector('i'); f.style.animation = 'none'; void f.offsetWidth; f.style.animation = ''; });
+    dots.forEach(function (d, k) { d.classList.toggle('on', k === i); d.setAttribute('aria-current', k === i ? 'step' : 'false'); });
+    fill(true);
   }
   function offsetOf(i) { return cards[i].offsetLeft - cards[0].offsetLeft; }
   function go(i, smooth) {
@@ -1395,44 +1579,60 @@ sup a{text-decoration:none;color:var(--sage-deep);font-weight:700}
   }
   function schedule(ms) {
     clearTimeout(timer); startedAt = performance.now(); left = ms;
+    if (held) return;
     timer = setTimeout(function () {
       if (cur >= cards.length - 1) { setState('ended'); return; }
       go(cur + 1, true); schedule(DUR);
     }, ms);
   }
-  function pause() { if (sec.getAttribute('data-state') !== 'playing') return; clearTimeout(timer); left = Math.max(0, left - (performance.now() - startedAt)); setState('paused'); }
+  function hold(on) {   // off the screen: the timer and the filling dot wait, nothing else changes
+    if (on === held) return; held = on; sec.classList.toggle('held', on);
+    if (sec.getAttribute('data-state') !== 'playing') return;
+    if (on) { clearTimeout(timer); left = Math.max(0, left - (performance.now() - startedAt)); }
+    else schedule(left);
+  }
+  function pause() { if (sec.getAttribute('data-state') !== 'playing') return; clearTimeout(timer); if (!held) left = Math.max(0, left - (performance.now() - startedAt)); setState('paused'); }
   function resume() { if (reduce) return; setState('playing'); schedule(left); }
-  // nearest card to the row's start, when the reader scrolls the row themselves
+  // the reader moved the row themselves: carry on from the card they chose
   var raf = 0;
   track.addEventListener('scroll', function () {
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(function () {
+      if (performance.now() - programmatic < 900) return;
       var x = track.scrollLeft, best = 0, d = Infinity;
       cards.forEach(function (c, k) { var dd = Math.abs(offsetOf(k) - x); if (dd < d) { d = dd; best = k; } });
-      if (performance.now() - programmatic > 900) { if (best !== cur) { pause(); left = DUR; light(best); } }
+      if (best === cur) return;
+      var st = sec.getAttribute('data-state');
+      light(best); left = DUR;
+      if (st === 'playing') schedule(DUR);
+      else if (st === 'ended') { setState('playing'); schedule(DUR); }
     });
   }, { passive: true });
-  ['pointerdown', 'wheel', 'touchstart'].forEach(function (t) { track.addEventListener(t, function (e) { if (t === 'wheel' && Math.abs(e.deltaX) < Math.abs(e.deltaY)) return; pause(); }, { passive: true }); });
-  dots.forEach(function (d, k) { d.addEventListener('click', function () { var was = sec.getAttribute('data-state'); go(k, true); left = DUR; if (was === 'playing') schedule(DUR); else setState(k === cards.length - 1 && was === 'ended' ? 'ended' : 'paused'); }); });
+  dots.forEach(function (d, k) { d.addEventListener('click', function () {
+    var st = sec.getAttribute('data-state'); go(k, true); left = DUR;
+    if (st === 'playing' || st === 'ended') { setState('playing'); schedule(DUR); } else fill(true);
+  }); });
   play.addEventListener('click', function () {
     var s = sec.getAttribute('data-state');
     if (s === 'playing') pause();
     else if (s === 'ended') { go(0, true); setState('playing'); schedule(DUR); }
     else { if (left <= 0) left = DUR; resume(); }
   });
+  function popCtl() { ctl.classList.add('show'); setTimeout(function () { ctl.classList.add('ready'); }, 340); }
   light(0);
-  if (reduce || !('IntersectionObserver' in window)) { sec.classList.add('static'); setState('paused'); return; }
+  if (reduce || !('IntersectionObserver' in window)) { sec.classList.add('static'); setState('paused'); ctl.classList.add('show', 'ready'); return; }
   setState('paused');
-  // starts when the row is well into view; pauses itself while out of view
   new IntersectionObserver(function (es) {
     es.forEach(function (e) {
-      var was = inView; inView = e.intersectionRatio >= 0.55;
-      if (inView && !was && !sec.__started) { sec.__started = true; setState('playing'); schedule(DUR); }
-      else if (inView && !was && sec.__autoPaused) { sec.__autoPaused = false; resume(); }
-      else if (!inView && was && sec.getAttribute('data-state') === 'playing') { pause(); sec.__autoPaused = true; }
+      var r = e.intersectionRatio; lastR = r;
+      if (!sec.__started) {
+        if (r >= 0.55) { sec.__started = true; setState('playing'); schedule(DUR); setTimeout(popCtl, 1000); }
+        return;
+      }
+      if (r < 0.12) hold(true); else if (r >= 0.3) hold(false);
     });
-  }, { threshold: [0, 0.55, 1] }).observe(track);
-  document.addEventListener('visibilitychange', function () { if (document.hidden && sec.getAttribute('data-state') === 'playing') { pause(); sec.__autoPaused = true; } });
+  }, { threshold: [0, 0.12, 0.3, 0.55, 1] }).observe(track);
+  document.addEventListener('visibilitychange', function () { if (sec.__started) hold(document.hidden || lastR < 0.12); });
 })();
 
 </script>
